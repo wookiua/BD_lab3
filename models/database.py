@@ -10,10 +10,18 @@ class WindDirection(str, enum.Enum):
     S = "S"
     E = "E"
     W = "W"
-    NW = "NW"
     NE = "NE"
+    NW = "NW"
+    SE = "SE"
     SW = "SW"
-    SE = "SE" 
+    NNE = "NNE"
+    NNW = "NNW"
+    SSE = "SSE"
+    SSW = "SSW"
+    ENE = "ENE"
+    ESE = "ESE"
+    WNW = "WNW"
+    WSW = "WSW" 
 
 class Weather(Base):
     __tablename__ = 'weather'
