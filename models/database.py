@@ -1,4 +1,4 @@
-from sqlalchemy import Column, Integer, String, Float, Date, Time, Enum
+from sqlalchemy import Column, Integer, String, Float, Date, Time, Enum, Boolean
 from sqlalchemy.orm import DeclarativeBase
 import enum
 
@@ -39,3 +39,4 @@ class Weather(Base):
     moonset = Column(Time)
     moon_phase = Column(String)
     moon_illumination = Column(Integer)
+    should_go_outside = Column(Boolean, nullable=True)

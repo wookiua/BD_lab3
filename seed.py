@@ -19,6 +19,11 @@ df_filtered = df[columns_to_keep].copy()
 
 df_filtered['last_updated'] = pd.to_datetime(df_filtered['last_updated']).dt.date
 
+time_columns = ['sunrise', 'sunset', 'moonrise', 'moonset']
+for col in time_columns:
+
+    df_filtered[col] = pd.to_datetime(df_filtered[col], errors='coerce').dt.time
+
 print("Uploading data...")
 df_filtered.to_sql('weather', engine, if_exists='append', index=False)
 
