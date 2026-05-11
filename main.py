@@ -1,26 +1,52 @@
-from sqlalchemy import create_engine
-from sqlalchemy.orm import sessionmaker
-from services.logic import get_moon_data_by_country, update_recommendations
+from sqlalchemy.orm import Session
+from models.database import SessionLocal, Weather, CelestialData
+from services.logic import update_recommendations
 
-engine = create_engine('postgresql+psycopg2://postgres:27182818@localhost/DB_lab3')
-SessionLocal = sessionmaker(autocommit=False, autoflush=False, bind=engine)
+def get_weather_report(db: Session, country_name: str):
+   
+    results = db.query(Weather).filter(Weather.country == country_name).limit(10).all()
+
+    
+    if not results:
+        print(f"No records found for country: {country_name}")
+        return
+
+    print(f"\nWeather report for {country_name}:")
+    print(f"\nShowing first {len(results)}:")
+    print("-" * 50)
+    
+    for res in results:
+
+        celestial = res.celestial_data
+        
+        if celestial:
+            status = "Worth going out" if celestial.should_go_outside else "Stay home"
+            print(f"Date: {res.last_updated} | "
+                  f"Moon: {celestial.moon_phase} ({celestial.moon_illumination}%) | "
+                  f"Verdict: {status}")
+        else:
+            print(f"Date: {res.last_updated} | No celestial data available for this record.")
 
 def main():
     db = SessionLocal()
     try:
 
-        print("\nBeginn")
+        print("Running data analysis...")
         update_recommendations(db)
-
-
-        country = input("\nEnter country name: ")
-        results = get_moon_data_by_country(db, country)
         
-        print(f"\nRecords found for {country}: {len(results)}")
-        for r in results[:10]:
-            status = "Worth going out (Bright moon)" if r.should_go_outside else "Stay home (Too dark)"
-            print(f"Date: {r.last_updated} | Illumination: {r.moon_illumination}% | Verdict: {status}")
+
+        while True:
+            country = input("\nEnter country name (or 'exit' to quit): ").strip()
+            if country.lower() == 'exit':
+                break
             
+            if country:
+                get_weather_report(db, country)
+            else:
+                print("Please enter a valid country name.")
+                
+    except Exception as e:
+        print(f"An error occurred: {e}")
     finally:
         db.close()
 

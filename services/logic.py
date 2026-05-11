@@ -1,5 +1,6 @@
 from sqlalchemy.orm import Session
 from models.database import Weather
+from models.database import CelestialData
 
 def get_moon_data_by_country(db: Session, country_name: str, min_illumination: int = 50):
     return db.query(Weather).filter(
@@ -9,7 +10,7 @@ def get_moon_data_by_country(db: Session, country_name: str, min_illumination: i
 
 def update_recommendations(db: Session):
  
-    records = db.query(Weather).all()
+    records = db.query(CelestialData).all()
     
     for record in records:
 
