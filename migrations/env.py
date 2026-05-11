@@ -10,7 +10,7 @@ import os
 
 sys.path.insert(0, os.path.abspath(os.path.join(os.path.dirname(__file__), '..')))
 
-# Тепер імпортуємо Base, який містить опис усіх таблиць
+
 from models.database import Base
 
 
